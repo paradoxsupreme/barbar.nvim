@@ -21,7 +21,7 @@ local function set_highlights()
     local buffer_status = hl_group[2]
     nvim.command(
       'hi! ' .. icon_hl .. buffer_status ..
-      ' guifg=' .. 'g:terminal_color_1' ..
+      ' guifg=g:terminal_color_1' ..
       ' guibg=' .. get_attr('Buffer'..buffer_status, 'background')
     )
   end
@@ -67,7 +67,7 @@ local function get_icon(buffer_name, filetype, buffer_status)
     local hl_group = icon_hl .. buffer_status
     nvim.command(
       'hi! ' .. hl_group ..
-      ' guifg=' .. 'g:terminal_color_1' ..
+      ' guifg=g:terminal_color_1' ..
       ' guibg=' .. get_attr('Buffer'..buffer_status, 'background')
     )
     table.insert(hl_groups, { icon_hl, buffer_status })
