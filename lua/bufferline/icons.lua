@@ -4,6 +4,7 @@
 
 local nvim = require'bufferline.nvim'
 local status, web = pcall(require, 'nvim-web-devicons')
+local localColors = require'barbar-colors'
 
 local function get_attr(group, attr)
   local rgb_val = (nvim.get_hl_by_name(group, true) or {})[attr]
@@ -21,7 +22,7 @@ local function set_highlights()
     local buffer_status = hl_group[2]
     nvim.command(
       'hi! ' .. icon_hl .. buffer_status ..
-      ' guifg= "#ff0000"' ..
+      ' guifg=' .. localColors.blue ..
       ' guibg=' .. get_attr('Buffer'..buffer_status, 'background')
     )
   end
@@ -67,7 +68,7 @@ local function get_icon(buffer_name, filetype, buffer_status)
     local hl_group = icon_hl .. buffer_status
     nvim.command(
       'hi! ' .. hl_group ..
-      ' guifg= "#FF0000"' ..
+      ' guifg=' .. localColors.blue ..
       ' guibg=' .. get_attr('Buffer'..buffer_status, 'background')
     )
     table.insert(hl_groups, { icon_hl, buffer_status })
