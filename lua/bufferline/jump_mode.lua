@@ -116,7 +116,7 @@ end
 
 local function activate()
   state.is_picking_buffer = true
-  vim.fn['bufferline#update']()
+  state.update()
   nvim.command('redraw')
   state.is_picking_buffer = false
 
@@ -132,12 +132,12 @@ local function activate()
       did_switch = true
     else
       nvim.command('echohl WarningMsg')
-      nvim.command([[echom "Could't find buffer"]])
+      nvim.command([[echom "Couldn't find buffer"]])
       nvim.command('echohl None')
     end
   end
 
-  vim.fn['bufferline#update']()
+  state.update()
   nvim.command('redraw')
 end
 

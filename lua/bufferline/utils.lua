@@ -1,4 +1,3 @@
--- !::exe [luafile %]
 --
 -- utils.lua
 --
@@ -6,15 +5,19 @@
 local vim = vim
 local bufname = vim.fn.bufname
 local fnamemodify = vim.fn.fnamemodify
-local split = vim.split
-local join = table.concat
+local matchlist = vim.fn.matchlist
+local strcharpart = vim.fn.strcharpart
 local strwidth = vim.api.nvim_strwidth
 
 local function len(value)
   return #value
 end
 
-local function index(tbl, n)
+local function is_nil(value)
+  return value == nil or value == vim.NIL
+end
+
+local function index_of(tbl, n)
   for i, value in ipairs(tbl) do
     if value == n then
       return i
@@ -23,9 +26,20 @@ local function index(tbl, n)
   return nil
 end
 
+local function has(tbl, n)
+  return index_of(tbl, n) ~= nil
+end
+
 local function slice(tbl, first, last)
   if type(tbl) == 'string' then
-    return string.sub(tbl, first, last)
+    if last == nil then
+      local start = first - 1
+      return strcharpart(tbl, start)
+    else
+      local start = first - 1
+      local length = last - first + 1
+      return strcharpart(tbl, start, length)
+    end
   end
 
   if first < 0 then
@@ -65,41 +79,13 @@ local function basename(path)
    return fnamemodify(path, ':t')
 end
 
-local function get_buffer_name(number)
-  local name = bufname(number)
-  if name == '' then
-    return '[buffer ' .. number .. ']'
-  end
-  return basename(name)
-end
-
-function get_unique_name (first, second)
-  local first_parts  = split(first, '/')
-  local second_parts = split(second, '/')
-
-  local length = 1
-  local first_result  = join(slice(first_parts, -length), '/')
-  local second_result = join(slice(second_parts, -length), '/')
-
-  while first_result == second_result and
-        length < math.max(len(first_parts), len(second_parts))
-  do
-    length = length + 1
-    first_result  = join(slice(first_parts,  -math.min(len(first_parts), length)), '/')
-    second_result = join(slice(second_parts, -math.min(len(second_parts), length)), '/')
-  end
-
-  return first_result, second_result
-end
-
--- print(vim.inspect(get_buffer_names(vim.g['bufferline#'].buffers)))
-
 return {
   len = len,
-  index = index,
+  is_nil = is_nil,
+  index_of = index_of,
+  has = has,
   slice = slice,
   reverse = reverse,
   collect = collect,
-  get_buffer_name = get_buffer_name,
-  get_unique_name = get_unique_name,
+  basename = basename,
 }

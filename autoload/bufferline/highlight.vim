@@ -12,13 +12,15 @@ function bufferline#highlight#setup()
    let fg_special  = s:fg(['Special'], '#599eff')
    let fg_subtle   = s:fg(['NonText', 'Comment'], '#555555')
 
-   let bg_current  = s:bg(['Normal'], '#000000')
-   let bg_visible  = s:bg(['TabLineSel', 'Normal'], '#000000')
-   let bg_inactive = s:bg(['TabLineFill', 'StatusLine'], '#000000')
+   let bg_current  = s:bg(['Normal'], 'none')
+   let bg_visible  = s:bg(['TabLineSel', 'Normal'], 'none')
+   let bg_inactive = s:bg(['TabLineFill', 'StatusLine'], 'none')
 
    "      Current: current buffer
    "      Visible: visible but not current buffer
    "     Inactive: invisible but not current buffer
+   "        -Icon: filetype icon
+   "       -Index: buffer index
    "         -Mod: when modified
    "        -Sign: the separator between buffers
    "      -Target: letter in buffer-picking mode
@@ -40,6 +42,13 @@ function bufferline#highlight#setup()
    \ ['BufferInactiveTarget', fg_target,   bg_inactive,  'bold'],
    \ ['BufferTabpages',       fg_special,  bg_inactive, 'bold'],
    \ ['BufferTabpageFill',    fg_inactive, bg_inactive],
+   \ ])
+
+   call s:hi_link([
+   \ ['BufferCurrentIcon',  'BufferCurrent'],
+   \ ['BufferVisibleIcon',  'BufferVisible'],
+   \ ['BufferInactiveIcon', 'BufferInactive'],
+   \ ['BufferOffset',       'BufferTabpageFill'],
    \ ])
 
    lua require'bufferline.icons'.set_highlights()
@@ -68,6 +77,12 @@ endfunc
 function! s:hi_all(groups)
    for group in a:groups
       call call(function('s:hi'), group)
+   endfor
+endfunc
+
+function! s:hi_link(pairs)
+   for pair in a:pairs
+      execute 'hi default link ' . join(pair)
    endfor
 endfunc
 
